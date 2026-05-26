@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class EmployeeRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        // return $this->user('canvas')->isAdmin;
+        // if (auth()->guard('website')->user()) {
+        //     return true;
+        // }
+
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        if ($this->isMethod('post')) {
+            $rules = [
+                'full_name' => 'required|min:4',
+                'email' => 'required|email|min:2|unique:website_employees,email',
+                'dob' => 'required',
+                'receive_bday_notification' => 'required',
+                'gender' => 'required',
+                'avatar' => 'nullable|mimes:jpeg,png,jpg',
+            ];
+        } else {
+            $rules = [
+                'full_name' => 'required|min:2',
+                'email' => 'required|email|min:2|unique:website_employees,email,' . request()->employee,
+                'dob' => 'required',
+                'receive_bday_notification' => 'required',
+                'gender' => 'required',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg',
+            ];
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'full_name' => 'Nome Completo',
+            'email' => 'Email',
+            'dob' => 'Data de Nascimento',
+            'receive_bday_notification' => 'Receber Felicitação',
+            'is_lecturer' => 'é docente',
+            'is_national' => 'é nacional',
+            'tel_no' => 'contacto',
+            'orcid_id' => 'orcid id',
+            'description' => 'sumário',
+            'extension' => 'extensão',
+            'gender' => 'gênero',
+            'avatar' => 'Fotografia'
+        ];
+    }
+
+     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        // dd(request()->all());
+
+        $this->merge([
+            
+        ]);
+    }
+}
